@@ -28,8 +28,11 @@ class CityTableViewController: UITableViewController {
     }
     
     // MARK: - Navigation
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let indexPath = tableView.indexPathForSelectedRow {
+            guard let vc = segue.destination as? WeatherViewController else { return }
+                vc.city = cities[indexPath.row]
         }
     }
 }
