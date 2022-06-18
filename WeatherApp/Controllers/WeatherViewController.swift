@@ -36,16 +36,15 @@ class WeatherViewController: UIViewController {
     }
     
     func fetchWeather() {
-        networkManager.fetchWeatherBy(
-            latitude: city.latitude,
-            longitude: city.longitude,
-            completion: { response in
+        networkManager.fetchWeatherBy(latitude: city.latitude, longitude: city.longitude) { result in
+            switch result {
+            case .success(let result):
                 self.spinnerVC.deactivate()
-                self.setWeather(response: response)
-            },
-            errorHandler: { title, message in
-                self.showAlert(title: title, message: message)
-            })
+                self.setWeather(result: result)
+            case .failure(let error):
+                self.showAlert(title: "Error", message: error.errorDescription ?? "")
+            }
+        }
     }
     
     func showAlert(title: String, message: String) {
@@ -62,9 +61,9 @@ class WeatherViewController: UIViewController {
         present(alert, animated: true)
     }
     
-    private func setWeather(response: WeatherResponse) {
-        currentTime = response.now
-        weather = response.fact
+    private func setWeather(result: WeatherResponse) {
+        currentTime = result.time
+        weather = result.weather
         
         if let weather = weather {
             timeLabel.text = getFormattedDate(currentTime)
