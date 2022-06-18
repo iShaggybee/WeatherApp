@@ -43,9 +43,13 @@ class NetworkManager {
                                           humidity: weatherResponse.weather?.humidity ?? 0,
                                           season: weatherResponse.weather?.season ?? "")
                     
-                    completion(.success(WeatherResponse(time: weatherResponse.time ?? 0, weather: weather)))
+                    DispatchQueue.main.async {
+                        completion(.success(WeatherResponse(time: weatherResponse.time ?? 0, weather: weather)))
+                    }
                 case .failure(let error):
-                    completion(.failure(error))
+                    DispatchQueue.main.async {
+                        completion(.failure(error))
+                    }
                 }
             }.resume()
     }
